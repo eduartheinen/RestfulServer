@@ -35,7 +35,11 @@ public class Hello {
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public String sayHtmlHello() {
-		return "<html> " + "<title>" + "Hello Jersey" + "</title>"
-				+ "<body><h1>" + "Hello Jersey" + "</body></h1>" + "</html> ";
+		try {
+			ProjectSetup.dropTables();
+			return "<html><body><p> success: </p></body></html>";
+		} catch (Exception e) {
+			return "<html><body><p> error: " + e.getMessage() + "</p></body></html>";
+		}
 	}
 }
