@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public enum Database {
-	INSTANCE;
+	INSTANCE; //Singleton de acordo com: http://www.vogella.com/tutorials/DesignPatternSingleton/article.html
 
 	private static String userName = "restfullserver";
 	private static String password = "teste@rest";

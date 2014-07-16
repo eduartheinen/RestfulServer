@@ -35,11 +35,22 @@ public class Hello {
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public String sayHtmlHello() {
+		return "<html><body><h1>Hello Jersey</h1></body></html>";
+	}
+
+	// Path define o caminho aonde o recurso estará disponível: localhost:8080/restfullServer/hello/setup
+	@Path("setup")
+	// GET define o método
+	@GET
+	// e Produces define o tipo do retorno! SIMPLES ASSIM!
+	@Produces(MediaType.TEXT_HTML)
+	public String setup() {
 		try {
-			ProjectSetup.dropTables();
-			return "<html><body><p> success: </p></body></html>";
+			ProjectSetup.setupDatabase();
+			return "<html><body><p> success! </p></body></html>";
 		} catch (Exception e) {
-			return "<html><body><p> error: " + e.getMessage() + "</p></body></html>";
+			return "<html><body><p> error: " + e.getMessage()
+					+ "</p></body></html>";
 		}
 	}
 }
