@@ -12,7 +12,7 @@ public class ProjectSetup {
 	public static void createTables() throws ClassNotFoundException, SQLException {
 		Connection conn = Database.getConnection();
 		Statement stmt = conn.createStatement();
-		String users = "CREATE TABLE users("
+		String users = "CREATE TABLE IF NOT EXISTS users("
 				+ "id serial NOT NULL,"
 				+ "username varchar(255) NOT NULL UNIQUE,"
 				+ "password varchar(255) NOT NULL,"
@@ -20,7 +20,7 @@ public class ProjectSetup {
 				+ "created_at timestamp without time zone,"
 				+ "updated_at timestamp without time zone,"
 				+ "CONSTRAINT users_pkey PRIMARY KEY (id));";
-		String posts = "CREATE TABLE posts("
+		String posts = "CREATE TABLE IF NOT EXISTS posts("
 				+ "id serial NOT NULL,"
 				+ "user_id integer REFERENCES users (id),"
 				+ "title varchar(255) NOT NULL,"
@@ -29,12 +29,12 @@ public class ProjectSetup {
 				+ "created_at timestamp without time zone,"
 				+ "updated_at timestamp without time zone,"
 				+ "CONSTRAINT posts_pkey PRIMARY KEY (id));";
-		String categories = "CREATE TABLE categories("
+		String categories = "CREATE TABLE IF NOT EXISTS categories("
 				+ "id serial NOT NULL,"
 				+ "name varchar(255) NOT NULL,"
 				+ "created_at timestamp without time zone,"
 				+ "CONSTRAINT categories_pkey PRIMARY KEY (id));";
-		String posts_categories = "CREATE TABLE posts_categories("
+		String posts_categories = "CREATE TABLE IF NOT EXISTS posts_categories("
 				+ "post_id integer REFERENCES posts (id),"
 				+ "category_id integer REFERENCES categories (id),"
 				+ "created_at timestamp without time zone);";

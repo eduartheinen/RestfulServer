@@ -22,6 +22,5 @@ public enum Database {
 		conn = DriverManager.getConnection("jdbc:" + dbms + "://" + hostname
 				+ ":" + portNumber + "/" + dbName, userName, password);
 		return conn;
-
 	}
 }
