@@ -18,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.codehaus.jettison.json.JSONException;
 
+import com.utfpr.restfulServer.Category.Category;
 import com.utfpr.restfulServer.Post.Post;
 import com.utfpr.restfulServer.User.User;
 
@@ -117,6 +118,48 @@ public class Resources {
 		post.create();
 		servletResponse
 				.sendRedirect("http://localhost:8080/restfulServer/posts");
+	}
+
+	@GET
+	@Path("categories")
+	@Produces(MediaType.APPLICATION_JSON)
+	// http://localhost:8080/restfulServer/categories #json
+	public String categoriesIndex() throws ClassNotFoundException,
+			SQLException, JSONException {
+		List<Category> categories = new ArrayList<Category>();
+		categories = Category.index();
+		String result = "";
+		for (Category category : categories) {
+			result += category.toJSON();
+		}
+
+		return result;
+	}
+
+	@GET
+	@Path("categories/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	// http://localhost:8080/restfulServer/users #json
+	public String showCategory(@PathParam("id") String id)
+			throws ClassNotFoundException, SQLException, JSONException {
+		Category category = Category.getById(id);
+		return category.toJSON();
+	}
+
+	@POST
+	@Path("categories")
+	@Produces(MediaType.TEXT_HTML)
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	// http://localhost:8080/restfulServer/users #POST
+	public void createCategory(@FormParam("name") String name,
+			@Context HttpServletResponse servletResponse) throws IOException,
+			ClassNotFoundException, SQLException {
+
+		Category category = new Category(null, name);
+
+		category.create();
+		servletResponse
+				.sendRedirect("http://localhost:8080/restfulServer/categories");
 	}
 
 	@GET
