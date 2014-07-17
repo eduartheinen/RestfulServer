@@ -14,12 +14,11 @@ public class Post {
 	private String id, title, content, excerpt;
 	private User author;
 
-	public Post(String id, String title, String content, String excerpt,
-			User author) {
+	public Post(String id, String title, String content, User author) {
 		this.id = id;
 		this.title = title;
 		this.content = content;
-		this.excerpt = excerpt;
+		this.excerpt = content.substring(0, Math.min(content.length(), 255));
 		this.author = author;
 	}
 
@@ -88,8 +87,8 @@ public class Post {
 
 		if (rs.next()) {
 			Post post = new Post(rs.getString("id"), rs.getString("title"),
-					rs.getString("content"), rs.getString("excerpt"),
-					User.getById(rs.getString("user_id")));
+					rs.getString("content"), User.getById(rs
+							.getString("user_id")));
 			return post;
 		}
 
@@ -104,8 +103,8 @@ public class Post {
 
 		while (rs.next()) {
 			Post post = new Post(rs.getString("id"), rs.getString("title"),
-					rs.getString("content"), rs.getString("excerpt"),
-					User.getById(rs.getString("user_id")));
+					rs.getString("content"), User.getById(rs
+							.getString("user_id")));
 			result.add(post);
 		}
 

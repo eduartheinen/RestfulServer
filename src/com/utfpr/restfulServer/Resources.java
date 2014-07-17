@@ -35,7 +35,8 @@ public class Resources {
 	@Path("users")
 	@Produces(MediaType.APPLICATION_JSON)
 	// http://localhost:8080/restfulServer/users #json
-	public String usersIndex() throws ClassNotFoundException, SQLException, JSONException {
+	public String usersIndex() throws ClassNotFoundException, SQLException,
+			JSONException {
 		List<User> users = new ArrayList<User>();
 		users = User.index();
 		String result = "";
@@ -44,12 +45,13 @@ public class Resources {
 		}
 		return result;
 	}
-	
+
 	@GET
 	@Path("users/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	// http://localhost:8080/restfulServer/users #json
-	public String showUser(@PathParam("id") String id) throws ClassNotFoundException, SQLException, JSONException {
+	public String showUser(@PathParam("id") String id)
+			throws ClassNotFoundException, SQLException, JSONException {
 		User user = User.getById(id);
 		return user.toJSON();
 	}
@@ -71,12 +73,13 @@ public class Resources {
 		servletResponse
 				.sendRedirect("http://localhost:8080/restfulServer/users");
 	}
-	
+
 	@GET
 	@Path("posts")
 	@Produces(MediaType.APPLICATION_JSON)
 	// http://localhost:8080/restfulServer/posts #json
-	public String postsIndex() throws ClassNotFoundException, SQLException, JSONException {
+	public String postsIndex() throws ClassNotFoundException, SQLException,
+			JSONException {
 		List<Post> posts = new ArrayList<Post>();
 		posts = Post.index();
 		String result = "";
@@ -86,12 +89,13 @@ public class Resources {
 
 		return result;
 	}
-	
+
 	@GET
 	@Path("posts/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	// http://localhost:8080/restfulServer/users #json
-	public String showPost(@PathParam("id") String id) throws ClassNotFoundException, SQLException, JSONException {
+	public String showPost(@PathParam("id") String id)
+			throws ClassNotFoundException, SQLException, JSONException {
 		Post post = Post.getById(id);
 		return post.toJSON();
 	}
@@ -108,7 +112,7 @@ public class Resources {
 			@Context HttpServletResponse servletResponse) throws IOException,
 			ClassNotFoundException, SQLException {
 
-		Post post = new Post(null, title, content, excerpt, User.getById(user_id));
+		Post post = new Post(null, title, content, User.getById(user_id));
 
 		post.create();
 		servletResponse
