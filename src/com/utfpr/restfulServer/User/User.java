@@ -3,6 +3,9 @@ package com.utfpr.restfulServer.User;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
 public class User {
 	private String id, username, password, email;
 
@@ -45,15 +48,20 @@ public class User {
 		this.email = email;
 	}
 
-	public String toJSON() {
-		return "json";
+	public String toJSON() throws JSONException {
+		JSONObject obj = new JSONObject();
+		obj.put("id", this.id);
+		obj.put("username", this.username);
+		obj.put("password", this.password);
+		obj.put("email", this.email);
+		return obj.toString();
 	}
-	
-	//CRUD using UserDAO
-	public void create() throws ClassNotFoundException, SQLException{
-		ResultSet rs =  UserDAO.instance.create(this);
-		
-		if(rs.next())
+
+	// CRUD using UserDAO
+	public void create() throws ClassNotFoundException, SQLException {
+		ResultSet rs = UserDAO.instance.create(this);
+
+		if (rs.next())
 			this.setId(rs.getString("id"));
 	}
 }

@@ -2,6 +2,8 @@ package com.utfpr.restfulServer;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
@@ -13,7 +15,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import org.codehaus.jettison.json.JSONException;
+
 import com.utfpr.restfulServer.User.User;
+import com.utfpr.restfulServer.User.UserDAO;
 
 @Path("/")
 public class Resources {
@@ -29,8 +34,14 @@ public class Resources {
 	@Path("users")
 	@Produces(MediaType.APPLICATION_JSON)
 	// http://localhost:8080/restfulServer/users #json
-	public String usersIndex() {
-		return Utility.constructJSON("users index - vai ter?", true);
+	public String usersIndex() throws ClassNotFoundException, SQLException, JSONException {
+		List<User> users = new ArrayList<User>();
+		users = UserDAO.instance.index();
+		String result = "";
+		for (User user : users) {
+			result += user.toJSON();
+		}
+		return result;
 	}
 
 	@POST
