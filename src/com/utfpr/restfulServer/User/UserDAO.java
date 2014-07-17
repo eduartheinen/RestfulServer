@@ -16,15 +16,28 @@ public enum UserDAO {
 			ClassNotFoundException {
 		Connection conn = Database.getConnection();
 		Statement stmt = conn.createStatement();
+
 		String sql = "INSERT INTO users (username, password, email) VALUES ('"
 				+ user.getUsername() + "', '" + user.getPassword() + "', '"
 				+ user.getEmail() + "');";
+
 		stmt.execute(sql, Statement.RETURN_GENERATED_KEYS);
 		conn.close();
+
 		return stmt.getGeneratedKeys();
 	}
 
-	public void read(int id) {
+	public ResultSet read(String id) throws ClassNotFoundException,
+			SQLException {
+		Connection conn = Database.getConnection();
+		Statement stmt = conn.createStatement();
+
+		String sql = "SELECT * FROM users WHERE id=" + id + " LIMIT 1;";
+
+		stmt.execute(sql);
+		conn.close();
+
+		return stmt.getResultSet();
 	}
 
 	public void update(User user) {
@@ -34,19 +47,23 @@ public enum UserDAO {
 	}
 
 	public List<User> index() throws SQLException, ClassNotFoundException {
-
 		Connection conn = Database.getConnection();
 		Statement stmt = conn.createStatement();
+
 		String sql = "SELECT * FROM users;";
+
 		stmt.execute(sql);
 		conn.close();
 
 		ResultSet rs = stmt.getResultSet();
 		List<User> result = new ArrayList<User>();
+
 		while (rs.next()) {
-			User user = new User(rs.getString("id"), rs.getString("username"), rs.getString("password"), rs.getString("email"));
+			User user = new User(rs.getString("id"), rs.getString("username"),
+					rs.getString("password"), rs.getString("email"));
 			result.add(user);
 		}
+
 		return result;
 	}
 }

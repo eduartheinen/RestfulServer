@@ -11,6 +11,7 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -42,6 +43,15 @@ public class Resources {
 			result += user.toJSON();
 		}
 		return result;
+	}
+	
+	@GET
+	@Path("users/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	// http://localhost:8080/restfulServer/users #json
+	public String showUser(@PathParam("id") String id) throws ClassNotFoundException, SQLException, JSONException {
+		User user = User.getById(id);
+		return user.toJSON();
 	}
 
 	@POST

@@ -64,4 +64,17 @@ public class User {
 		if (rs.next())
 			this.setId(rs.getString("id"));
 	}
+	
+	// static get user by id
+	public static User getById(String id) throws ClassNotFoundException,
+			SQLException {
+		ResultSet rs = UserDAO.instance.read(id);
+
+		if (rs.next()) {
+			User user = new User(rs.getString("id"), rs.getString("username"),
+					rs.getString("password"), rs.getString("email"));
+			return user;
+		}
+		return null;
+	}
 }
