@@ -2,6 +2,8 @@ package com.utfpr.restfulServer.User;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -76,5 +78,18 @@ public class User {
 			return user;
 		}
 		return null;
+	}
+	
+	public static List<User> index() throws SQLException, ClassNotFoundException {
+		ResultSet rs = UserDAO.instance.index();
+		List<User> result = new ArrayList<User>();
+
+		while (rs.next()) {
+			User user = new User(rs.getString("id"), rs.getString("username"),
+					rs.getString("password"), rs.getString("email"));
+			result.add(user);
+		}
+
+		return result;
 	}
 }

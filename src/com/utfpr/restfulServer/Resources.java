@@ -18,8 +18,8 @@ import javax.ws.rs.core.MediaType;
 
 import org.codehaus.jettison.json.JSONException;
 
+import com.utfpr.restfulServer.Post.Post;
 import com.utfpr.restfulServer.User.User;
-import com.utfpr.restfulServer.User.UserDAO;
 
 @Path("/")
 public class Resources {
@@ -28,7 +28,7 @@ public class Resources {
 	@Produces(MediaType.TEXT_HTML)
 	// http://localhost:8080/restfulServer/hello #html
 	public String sayHtmlHello() {
-		return "<html><body><h1>Hello Jersey</h1></body></html>";
+		return "<html><body><h1>Hello REST</h1></body></html>";
 	}
 
 	@GET
@@ -37,7 +37,7 @@ public class Resources {
 	// http://localhost:8080/restfulServer/users #json
 	public String usersIndex() throws ClassNotFoundException, SQLException, JSONException {
 		List<User> users = new ArrayList<User>();
-		users = UserDAO.instance.index();
+		users = User.index();
 		String result = "";
 		for (User user : users) {
 			result += user.toJSON();
@@ -70,6 +70,49 @@ public class Resources {
 		user.create();
 		servletResponse
 				.sendRedirect("http://localhost:8080/restfulServer/users");
+	}
+	
+	@GET
+	@Path("posts")
+	@Produces(MediaType.APPLICATION_JSON)
+	// http://localhost:8080/restfulServer/posts #json
+	public String postsIndex() throws ClassNotFoundException, SQLException, JSONException {
+		List<Post> posts = new ArrayList<Post>();
+		posts = Post.index();
+		String result = "";
+		for (Post post : posts) {
+			result += post.toJSON();
+		}
+
+		return result;
+	}
+	
+	@GET
+	@Path("posts/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	// http://localhost:8080/restfulServer/users #json
+	public String showPost(@PathParam("id") String id) throws ClassNotFoundException, SQLException, JSONException {
+		Post post = Post.getById(id);
+		return post.toJSON();
+	}
+
+	@POST
+	@Path("posts")
+	@Produces(MediaType.TEXT_HTML)
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	// http://localhost:8080/restfulServer/users #POST
+	public void createPost(@FormParam("title") String title,
+			@FormParam("content") String content,
+			@FormParam("excerpt") String excerpt,
+			@FormParam("user_id") String user_id,
+			@Context HttpServletResponse servletResponse) throws IOException,
+			ClassNotFoundException, SQLException {
+
+		Post post = new Post(null, title, content, excerpt, User.getById(user_id));
+
+		post.create();
+		servletResponse
+				.sendRedirect("http://localhost:8080/restfulServer/posts");
 	}
 
 	@GET
