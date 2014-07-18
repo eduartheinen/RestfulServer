@@ -8,18 +8,22 @@ import java.util.List;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import com.utfpr.restfulServer.Category.Category;
 import com.utfpr.restfulServer.User.User;
 
 public class Post {
 	private String id, title, content, excerpt;
 	private User author;
+	private List<Category> categories;
 
-	public Post(String id, String title, String content, User author) {
+	public Post(String id, String title, String content, User author,
+			List<Category> categories) {
 		this.id = id;
 		this.title = title;
 		this.content = content;
 		this.excerpt = content.substring(0, Math.min(content.length(), 255));
 		this.author = author;
+		this.setCategories(categories);
 	}
 
 	public String getId() {
@@ -62,13 +66,29 @@ public class Post {
 		this.author = author;
 	}
 
+	public List<Category> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(List<Category> categories) {
+		this.categories = categories;
+	}
+
 	public String toJSON() throws JSONException {
 		JSONObject obj = new JSONObject();
+		JSONObject categories = new JSONObject();
+
+		for (Category category : this.categories) {
+			categories.put(category.getId(), category.getName());
+		}
+
 		obj.put("id", this.id);
 		obj.put("author", this.author.getUsername());
 		obj.put("title", this.title);
 		obj.put("content", this.content);
 		obj.put("excerpt", this.excerpt);
+		obj.put("categories", categories);
+
 		return obj.toString();
 	}
 
@@ -78,6 +98,11 @@ public class Post {
 
 		if (rs.next())
 			this.setId(rs.getString("id"));
+
+		for (Category category : categories) {
+			Category.createPostsCategoriesRelationship(this.id,
+					category.getId());
+		}
 	}
 
 	// static get post by id
@@ -88,7 +113,8 @@ public class Post {
 		if (rs.next()) {
 			Post post = new Post(rs.getString("id"), rs.getString("title"),
 					rs.getString("content"), User.getById(rs
-							.getString("user_id")));
+							.getString("user_id")),
+					Category.getCategoriesByPostId(rs.getString("id")));
 			return post;
 		}
 
@@ -104,7 +130,9 @@ public class Post {
 		while (rs.next()) {
 			Post post = new Post(rs.getString("id"), rs.getString("title"),
 					rs.getString("content"), User.getById(rs
-							.getString("user_id")));
+							.getString("user_id")),
+					Category.getCategoriesByPostId(rs.getString("id")));
+
 			result.add(post);
 		}
 

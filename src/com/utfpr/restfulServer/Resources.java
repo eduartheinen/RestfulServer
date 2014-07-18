@@ -110,10 +110,18 @@ public class Resources {
 			@FormParam("content") String content,
 			@FormParam("excerpt") String excerpt,
 			@FormParam("user_id") String user_id,
+			@FormParam("categories") String categories,
 			@Context HttpServletResponse servletResponse) throws IOException,
 			ClassNotFoundException, SQLException {
-
-		Post post = new Post(null, title, content, User.getById(user_id));
+		
+		List<Category> categories_list = new ArrayList<Category>();
+		
+		for (String name : categories.split(",")) {
+			Category cat = Category.getOrCreateCategory(name.replaceAll("\\s",""));
+			categories_list.add(cat);
+		}
+		
+		Post post = new Post(null, title, content, User.getById(user_id), categories_list);
 
 		post.create();
 		servletResponse

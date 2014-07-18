@@ -39,7 +39,7 @@ public class Category {
 		return obj.toString();
 	}
 
-	// CRUD using PostDAO
+	// CRUD using CategoryDAO
 	public void create() throws ClassNotFoundException, SQLException {
 		ResultSet rs = CategoryDAO.instance.create(this);
 
@@ -47,7 +47,7 @@ public class Category {
 			this.setId(rs.getString("id"));
 	}
 
-	// static get post by id
+	// static get category by id
 	public static Category getById(String id) throws ClassNotFoundException,
 			SQLException {
 		ResultSet rs = CategoryDAO.instance.read(id);
@@ -59,6 +59,20 @@ public class Category {
 		}
 
 		return null;
+	}
+
+	public static List<Category> getCategoriesByPostId(String id)
+			throws SQLException, ClassNotFoundException {
+		ResultSet rs = CategoryDAO.instance.findByPostId(id);
+		List<Category> result = new ArrayList<Category>();
+
+		while (rs.next()) {
+			Category category = new Category(rs.getString("id"),
+					rs.getString("name"));
+			result.add(category);
+		}
+
+		return result;
 	}
 
 	// static index
@@ -74,5 +88,25 @@ public class Category {
 		}
 
 		return result;
+	}
+
+	public static Category getOrCreateCategory(String name)
+			throws ClassNotFoundException, SQLException {
+		ResultSet rs = CategoryDAO.instance.findByName(name);
+		if (rs.next()) {
+			Category category = new Category(rs.getString("id"),
+					rs.getString("name"));
+			return category;
+		}
+
+		Category category = new Category(null, name);
+		category.create();
+		return category;
+	}
+
+	public static void createPostsCategoriesRelationship(String post_id,
+			String category_id) throws ClassNotFoundException, SQLException {
+		CategoryDAO.instance.createPostsCategoriesRelationship(post_id,
+				category_id);
 	}
 }
