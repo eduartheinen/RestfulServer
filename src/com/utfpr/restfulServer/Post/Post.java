@@ -121,6 +121,22 @@ public class Post {
 		return null;
 	}
 
+	public static List<Post> getPostsByCategoryId(String id)
+			throws SQLException, ClassNotFoundException {
+		ResultSet rs = PostDAO.instance.findByCategoryId(id);
+		List<Post> result = new ArrayList<Post>();
+
+		while (rs.next()) {
+			Post post = new Post(rs.getString("id"), rs.getString("title"),
+					rs.getString("content"), User.getById(rs
+							.getString("user_id")),
+					Category.getCategoriesByPostId(rs.getString("id")));
+
+			result.add(post);
+		}
+		return result;
+	}
+
 	// static index
 	public static List<Post> index() throws SQLException,
 			ClassNotFoundException {

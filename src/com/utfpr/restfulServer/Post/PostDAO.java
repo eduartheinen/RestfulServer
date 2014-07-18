@@ -57,4 +57,18 @@ public enum PostDAO {
 
 		return stmt.getResultSet();
 	}
+
+	public ResultSet findByCategoryId(String id) throws ClassNotFoundException,
+			SQLException {
+		Connection conn = Database.getConnection();
+		Statement stmt = conn.createStatement();
+
+		String sql = "SELECT * FROM posts, posts_categories WHERE posts.id = posts_categories.post_id AND posts_categories.category_id ="
+				+ id + ";";
+
+		stmt.execute(sql);
+		conn.close();
+
+		return stmt.getResultSet();
+	}
 }

@@ -113,15 +113,17 @@ public class Resources {
 			@FormParam("categories") String categories,
 			@Context HttpServletResponse servletResponse) throws IOException,
 			ClassNotFoundException, SQLException {
-		
+
 		List<Category> categories_list = new ArrayList<Category>();
-		
+
 		for (String name : categories.split(",")) {
-			Category cat = Category.getOrCreateCategory(name.replaceAll("\\s",""));
+			Category cat = Category.getOrCreateCategory(name.replaceAll("\\s",
+					""));
 			categories_list.add(cat);
 		}
-		
-		Post post = new Post(null, title, content, User.getById(user_id), categories_list);
+
+		Post post = new Post(null, title, content, User.getById(user_id),
+				categories_list);
 
 		post.create();
 		servletResponse
@@ -152,6 +154,22 @@ public class Resources {
 			throws ClassNotFoundException, SQLException, JSONException {
 		Category category = Category.getById(id);
 		return category.toJSON();
+	}
+
+	@GET
+	@Path("categories/{id}/posts")
+	@Produces(MediaType.APPLICATION_JSON)
+	// http://localhost:8080/restfulServer/users #json
+	public String postsbyCategoryId(@PathParam("id") String id)
+			throws ClassNotFoundException, SQLException, JSONException {
+		List<Post> posts = new ArrayList<Post>();
+		posts = Post.getPostsByCategoryId(id);
+		String result = "";
+		for (Post post : posts) {
+			result += post.toJSON();
+		}
+
+		return result;
 	}
 
 	@POST
