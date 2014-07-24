@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -15,6 +16,9 @@ public class Post {
 	private String id, title, content, excerpt;
 	private User author;
 	private List<Category> categories;
+
+	public Post() {
+	}
 
 	public Post(String id, String title, String content, User author,
 			List<Category> categories) {
@@ -75,15 +79,15 @@ public class Post {
 	}
 
 	public String toJSON() throws JSONException {
-		JSONObject obj = new JSONObject();
-		JSONObject categories = new JSONObject();
 
+		JSONArray categories = new JSONArray();
 		for (Category category : this.categories) {
-			categories.put(category.getId(), category.getName());
+			categories.put(new JSONObject(category.toJSON()));
 		}
 
+		JSONObject obj = new JSONObject();
 		obj.put("id", this.id);
-		obj.put("author", this.author.getUsername());
+		obj.put("author", new JSONObject(this.author.toJSON()));
 		obj.put("title", this.title);
 		obj.put("content", this.content);
 		obj.put("excerpt", this.excerpt);

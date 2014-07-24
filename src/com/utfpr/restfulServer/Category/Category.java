@@ -11,6 +11,9 @@ import org.codehaus.jettison.json.JSONObject;
 public class Category {
 	private String id, name;
 
+	public Category() {
+	}
+
 	public Category(String id, String name) {
 		this.id = id;
 		this.setName(name);

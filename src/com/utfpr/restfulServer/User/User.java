@@ -11,6 +11,9 @@ import org.codehaus.jettison.json.JSONObject;
 public class User {
 	private String id, username, password, email;
 
+	public User() {
+	}
+
 	public User(String id, String username, String password, String email) {
 		this.id = id;
 		this.username = username;
@@ -66,7 +69,7 @@ public class User {
 		if (rs.next())
 			this.setId(rs.getString("id"));
 	}
-	
+
 	// static get user by id
 	public static User getById(String id) throws ClassNotFoundException,
 			SQLException {
@@ -79,8 +82,9 @@ public class User {
 		}
 		return null;
 	}
-	
-	public static List<User> index() throws SQLException, ClassNotFoundException {
+
+	public static List<User> index() throws SQLException,
+			ClassNotFoundException {
 		ResultSet rs = UserDAO.instance.index();
 		List<User> result = new ArrayList<User>();
 

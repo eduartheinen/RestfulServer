@@ -1,9 +1,11 @@
 package com.utfpr.restfulServer;
 
 import java.io.IOException;
+import java.net.URI;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
@@ -15,6 +17,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.codehaus.jettison.json.JSONException;
 
@@ -75,6 +78,24 @@ public class Resources {
 				.sendRedirect("http://localhost:8080/restfulServer/users");
 	}
 
+	@POST
+	@Path("users")
+	@Consumes(MediaType.APPLICATION_JSON)
+	// http://localhost:8080/restfulServer/users #POST
+	public Response createUserJson(User user) {
+		Logger.getGlobal()
+				.info("Request manipulado em post#user.json: " + user);
+
+		try {
+			user.create();
+			URI uri = URI.create("http://192.168.0.5:8080/restfulServer/users/"
+					+ user.getId());
+			return Response.created(uri).entity(user).build();
+		} catch (Exception e) {
+			return Response.noContent().build();
+		}
+	}
+
 	@GET
 	@Path("posts")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -89,6 +110,19 @@ public class Resources {
 		}
 
 		return result;
+
+		// List<Category> categories = new ArrayList<Category>();
+		// for (int i = 0; i < 3; i++) {
+		// Category cat = new Category(null, "cat" + i);
+		// categories.add(cat);
+		// }
+		//
+		// Post post = new Post(
+		// null,
+		// "teste",
+		// "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eros purus, interdum eget nisi quis, hendrerit vestibulum libero. Nulla facilisi. Nulla faucibus volutpat consequat. Vivamus euismod, augue scelerisque aliquet venenatis, mi est sodales nunc, ac condimentum nisl nisi a nisi. Nulla sed arcu lorem.",
+		// null, categories);
+		// return post.toJSON();
 	}
 
 	@GET
@@ -101,33 +135,52 @@ public class Resources {
 		return post.toJSON();
 	}
 
+	// @POST
+	// @Path("posts")
+	// @Produces(MediaType.TEXT_HTML)
+	// @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	// // http://localhost:8080/restfulServer/users #POST
+	// public void createPost(@FormParam("title") String title,
+	// @FormParam("content") String content,
+	// @FormParam("excerpt") String excerpt,
+	// @FormParam("user_id") String user_id,
+	// @FormParam("categories") String categories,
+	// @Context HttpServletResponse servletResponse) throws IOException,
+	// ClassNotFoundException, SQLException {
+	//
+	// List<Category> categories_list = new ArrayList<Category>();
+	//
+	// for (String name : categories.split(",")) {
+	// Category cat = Category.getOrCreateCategory(name.replaceAll("\\s",
+	// ""));
+	// categories_list.add(cat);
+	// }
+	//
+	// Post post = new Post(null, title, content, User.getById(user_id),
+	// categories_list);
+	//
+	// post.create();
+	// servletResponse
+	// .sendRedirect("http://localhost:8080/restfulServer/posts");
+	// }
+
 	@POST
 	@Path("posts")
-	@Produces(MediaType.TEXT_HTML)
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Consumes(MediaType.APPLICATION_JSON)
 	// http://localhost:8080/restfulServer/users #POST
-	public void createPost(@FormParam("title") String title,
-			@FormParam("content") String content,
-			@FormParam("excerpt") String excerpt,
-			@FormParam("user_id") String user_id,
-			@FormParam("categories") String categories,
-			@Context HttpServletResponse servletResponse) throws IOException,
-			ClassNotFoundException, SQLException {
+	public Response createPostJson(String request) {
+		Logger.getGlobal().info(
+				"Request manipulado em posts.json: post#" + request);
+		return null;
 
-		List<Category> categories_list = new ArrayList<Category>();
-
-		for (String name : categories.split(",")) {
-			Category cat = Category.getOrCreateCategory(name.replaceAll("\\s",
-					""));
-			categories_list.add(cat);
-		}
-
-		Post post = new Post(null, title, content, User.getById(user_id),
-				categories_list);
-
-		post.create();
-		servletResponse
-				.sendRedirect("http://localhost:8080/restfulServer/posts");
+		// try {
+		// post.create();
+		// URI uri = URI.create("http://192.168.0.5:8080/restfulServer/posts/"
+		// + post.getId());
+		// return Response.created(uri).entity(post).build();
+		// } catch (ClassNotFoundException | SQLException e) {
+		// return Response.noContent().build();
+		// }
 	}
 
 	@GET
@@ -152,8 +205,9 @@ public class Resources {
 	// http://localhost:8080/restfulServer/users #json
 	public String showCategory(@PathParam("id") String id)
 			throws ClassNotFoundException, SQLException, JSONException {
-		Category category = Category.getById(id);
-		return category.toJSON();
+		// Category category = Category.getById(id);
+		// return category.toJSON();
+		return null;
 	}
 
 	@GET
